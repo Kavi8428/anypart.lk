@@ -1,33 +1,45 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
-import {Link} from 'expo-router' // Import Link from expo-router
-import React from 'react'
-import Logo from '../assets/images/static-logo.png' // Adjust the path as necessary
+import { View, Image, Animated, Easing } from 'react-native'
+import DisplayAnImage from '../components/ui/logo'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'expo-router'
 
+const Index = () => {
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [colorAnim] = useState(new Animated.Value(0))
 
-const index = () => {
+  useEffect(() => {
+    Animated.timing(colorAnim, {
+      toValue: 1,
+      duration: 2000,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start(() => {
+      setLoading(false)
+      router.push('/welcome')
+    })
+
+    return () => colorAnim.stopAnimation()
+  }, [colorAnim, router])
+
+  const backgroundColor = colorAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['#FF6200', '#FFA500'],
+  })
+
   return (
-    <View style={styles.container}>
-        <Image
-            source={Logo
-
-            }
-            style={{ width: 300, height: 300, resizeMode: 'contain' }}
-        />
-        <Text style={{ color: '#fff', fontSize: 62, fontWeight: '400', fontFamily: 'Roboto' }}>Welcome</Text>
-        <Link href="/home" style={{ color: '#fff', fontSize: 24, fontWeight: '400', fontFamily: 'Roboto' }}>Home</Link>
-      {/* <Text>index to tests</Text> */}
-    </View>
+    <Animated.View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor,
+      }}
+    >
+      <DisplayAnImage width={400} height={150} />
+    </Animated.View>
   )
 }
 
-export default index
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        // flexDirection: 'row',
-        justifyContent: 'start',
-        alignItems: 'center',
-        backgroundColor: '#FF6200',
-    },
-})
+export default Index
