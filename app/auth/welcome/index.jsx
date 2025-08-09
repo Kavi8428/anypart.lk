@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { Input, Button } from '@rneui/base';
 import { Link, useRouter } from 'expo-router';
 import { Camera, CircleCheckBig, ArrowRight, Eye, EyeOff } from 'lucide-react-native';
-import DisplayAnImage from '../../components/ui/logo';
+import DisplayAnImage from '../../../components/ui/logo';
 import OverlayComponent from './overLay';
 
 const Index = () => {
@@ -44,12 +44,12 @@ const Index = () => {
 
   const onBuyPress = () => {
     toggleOverlay(); // Close the overlay
-    router.push('/buyer-reg'); // Redirect to /buy page
+    router.push('/auth/buyer-reg'); // Redirect to /buy page
   };
 
   const onSellPress = () => {
     toggleOverlay(); // Close the overlay
-    router.push('/sell'); // Redirect to /sell page
+    router.push('/auth/sell'); // Redirect to /sell page
   };
 
   return (

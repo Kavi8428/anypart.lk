@@ -17,7 +17,7 @@ const OverlayComponent = ({ visible, toggleOverlay, onBuyPress, onSellPress }) =
       }}
     >
       <Image
-        source={require('../../assets/images/selection.gif')}
+        source={require('../../../assets/images/selection.gif')}
         style={{ width: 200, height: 150, alignSelf: 'center', marginBottom: 16 }}
         resizeMode="contain"
       />

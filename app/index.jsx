@@ -2,6 +2,7 @@ import { View, Image, Animated, Easing } from 'react-native'
 import DisplayAnImage from '../components/ui/logo'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'expo-router'
+import '../services/firebase/config';
 
 const Index = () => {
   const router = useRouter()
@@ -16,7 +17,7 @@ const Index = () => {
       useNativeDriver: false,
     }).start(() => {
       setLoading(false)
-      router.push('/welcome')
+      router.push('/auth/welcome')
     })
 
     return () => colorAnim.stopAnimation()

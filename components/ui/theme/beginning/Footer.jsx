@@ -3,8 +3,7 @@ import { View, Text } from 'react-native';
 import { Button } from '@rneui/base';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 
-const Footer = ({ buttons = [] }) => {
-  // Map button labels to icons for the first and last buttons
+const Footer = ({ buttons = [], handleNext }) => {
   const getIcon = (button, index) => {
     if (index === 0 && button.toLowerCase() === 'previous') {
       return <ChevronLeft size={20} color="#FFFFFF" />;
@@ -12,7 +11,16 @@ const Footer = ({ buttons = [] }) => {
     if (index === buttons.length - 1 && button.toLowerCase() === 'next') {
       return <ChevronRight size={20} color="#FFFFFF" />;
     }
-    return null; // No icon for middle button or unmatched labels
+    return null;
+  };
+
+  const handleButtonPress = (button, index) => {
+    if (button.toLowerCase() === 'next' && handleNext) {
+      handleNext();
+      // console.log('Next button pressed', );
+    } else {
+      console.log(`${button} button pressed`);
+    }
   };
 
   return (
@@ -20,7 +28,7 @@ const Footer = ({ buttons = [] }) => {
       {buttons.map((button, index) => (
         <Button
           key={index}
-          onPress={() => console.log(`${button} button pressed`)} // Placeholder action
+          onPress={() => handleButtonPress(button, index)}
           buttonStyle={{
             backgroundColor: 'transparent',
             borderWidth: 1,

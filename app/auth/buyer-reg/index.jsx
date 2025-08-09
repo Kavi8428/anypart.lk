@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+import 'react-native-get-random-values';
 import { useRouter } from 'expo-router';
-import BeginningTheme from '../../components/ui/theme/beginning/Layout';
-import RegisterForm from '../../components/auth/RegisterForm';
+import { Alert } from 'react-native';
+import BeginningTheme from '../../../components/ui/theme/beginning/Layout';
+import RegisterForm from '../../../components/auth/RegisterForm';
+import { registerBuyer } from '../../../services/api/authService';
+import Dialog from '../../../components/ui/Dialog';
+import {usePhoneAuth} from '../../../hooks/usePhoneAuth';
 
 const BuyerReg = () => {
   const router = useRouter();
-
+  const { sendOTP, loading, error } = usePhoneAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,8 +27,9 @@ const BuyerReg = () => {
   const [districtError, setDistrictError] = useState('');
   const [mobileError, setMobileError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     let isValid = true;
 
     if (!name.trim()) {
@@ -33,7 +39,7 @@ const BuyerReg = () => {
       setNameError('');
     }
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setEmailError('Please enter a valid email address');
       isValid = false;
     } else {
@@ -82,25 +88,38 @@ const BuyerReg = () => {
       setConfirmPasswordError('');
     }
 
+    console.log('Entered mobile number:', mobile);
+
     if (isValid) {
-      console.log('Registering with:', {
-        name,
-        email,
-        password,
-        address,
-        city,
-        district,
-        mobile,
-        confirmPassword,
-      });
-      router.push('/buyer-confirm');
+      setShowConfirmDialog(true);
     }
+  };
+
+  const handleConfirmDialogConfirm = async () => {
+    setShowConfirmDialog(false);
+    if (!loading) {
+      const result = await sendOTP(mobile);
+      if (result.success) {
+        router.push({
+          pathname: 'auth/otp',
+          params: { mobile, name, email, address, city, district },
+        });
+      } else {
+        Alert.alert('Error', result.error || 'Failed to send OTP. Please try again.');
+      }
+    }
+  };
+
+  const handleConfirmDialogCancel = () => {
+    setShowConfirmDialog(false);
+    console.log('Registration cancelled by user');
   };
 
   return (
     <BeginningTheme
       footerButtons={['Previous', 'Login', 'Next']}
       headerTitle="Buyer Registration"
+      handleNext={handleRegister}
     >
       <RegisterForm
         name={name}
@@ -137,6 +156,16 @@ const BuyerReg = () => {
         confirmPasswordError={confirmPasswordError}
         setConfirmPasswordError={setConfirmPasswordError}
       />
+      <Dialog
+        visible={showConfirmDialog}
+        title="Registration Confirmation"
+        message={`The mobile number (${mobile}) will be used as your ID for anypart.lk. We will send an OTP to verify it. Please confirm to proceed.`}
+        onConfirm={handleConfirmDialogConfirm}
+        onCancel={handleConfirmDialogCancel}
+        leftBtn="Cancel"
+        rightBtn="Confirm"
+      />
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}
     </BeginningTheme>
   );
 };

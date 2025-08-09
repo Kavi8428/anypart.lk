@@ -21,6 +21,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "edgeToEdgeEnabled": true
     },
     "web": {
@@ -28,6 +29,7 @@
       "bundler": "metro",
       "output" : "static"
     },
-    "plugins": ["expo-router"]
+    "plugins": ["expo-router"
+  ]
   }
 }
