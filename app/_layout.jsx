@@ -5,7 +5,7 @@ import './global.css';
 
 const CustomHeader = () => {
   return (
-    <View className="bg-orange-500 p-4">
+    <View className="bg-primary p-4">
       {/* <Text className="text-white text-2xl font-bold text-center">
         Buyer Registration
       </Text> */}
@@ -50,6 +50,14 @@ const RootLayout = () => {
       />
       <Stack.Screen
         name="auth/otp/index"
+        options={{
+          headerShown: true,
+          header: () => <CustomHeader />,
+          headerBackVisible: false,
+        }}
+      />
+       <Stack.Screen
+        name="home/index"
         options={{
           headerShown: true,
           header: () => <CustomHeader />,

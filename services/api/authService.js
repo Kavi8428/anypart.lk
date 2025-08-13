@@ -4,44 +4,44 @@ import { getDatabase, ref, set } from 'firebase/database';
 import { v4 as uuidv4 } from 'uuid';
 
 export const registerBuyer = async (userData) => {
+  // Validate required fields (mobile number as username)
+  if (!userData.mobile || !/^\d{10}$/.test(userData.mobile)) {
+    return { success: false, errorCode: 'MOBILE_INVALID', errorMessage: 'Valid 10-digit mobile number is required' };
+  }
+  if (!userData.name.trim()) {
+    return { success: false, errorCode: 'NAME_EMPTY', errorMessage: 'Name cannot be empty' };
+  }
+  if (!userData.address.trim()) {
+    return { success: false, errorCode: 'ADDRESS_EMPTY', errorMessage: 'Address is required' };
+  }
+  if (!userData.city.trim()) {
+    return { success: false, errorCode: 'CITY_EMPTY', errorMessage: 'City is required' };
+  }
+  if (!userData.district.trim()) {
+    return { success: false, errorCode: 'DISTRICT_EMPTY', errorMessage: 'District is required' };
+  }
+
+  // Check for duplicate mobile number
+  const mobileExists = await checkMobileExists(userData.mobile);
+  if (mobileExists) {
+    return { success: false, errorCode: 'DUPLICATE_MOBILE', errorMessage: 'An account with this mobile number already exists' };
+  }
+
+  // Process data: Combine address fields and exclude email if empty
+  const processedData = {
+    name: userData.name,
+    mobile: userData.mobile,
+    address: userData.address,
+    city: userData.city,
+    district: userData.district,
+    fullAddress: `${userData.address}, ${userData.city}, ${userData.district}`,
+    email: userData.email || null,
+    processedAt: new Date().toISOString()
+  };
+
+  console.log('🔍 Processed registration data:', processedData);
+
   try {
-    // Validate required fields (mobile number as username)
-    if (!userData.mobile || !/^\d{10}$/.test(userData.mobile)) {
-      throw new Error('Valid 10-digit mobile number is required');
-    }
-    if (!userData.name.trim()) {
-      throw new Error('Name cannot be empty');
-    }
-    if (!userData.address.trim()) {
-      throw new Error('Address is required');
-    }
-    if (!userData.city.trim()) {
-      throw new Error('City is required');
-    }
-    if (!userData.district.trim()) {
-      throw new Error('District is required');
-    }
-
-    // Check for duplicate mobile number
-    const mobileExists = await checkMobileExists(userData.mobile);
-    if (mobileExists) {
-      throw new Error('An account with this mobile number already exists');
-    }
-
-    // Process data: Combine address fields and exclude email if empty
-    const processedData = {
-      name: userData.name,
-      mobile: userData.mobile,
-      address: userData.address,
-      city: userData.city,
-      district: userData.district,
-      fullAddress: `${userData.address}, ${userData.city}, ${userData.district}`,
-      email: userData.email || null,
-      processedAt: new Date().toISOString()
-    };
-
-    console.log('🔍 Processed registration data:', processedData);
-
     // Save to Firebase
     await saveBuyerRegistration(processedData);
 
@@ -63,6 +63,6 @@ export const registerBuyer = async (userData) => {
     return { success: true, message: 'Registration successful', sessionToken };
   } catch (error) {
     console.error('❌ Error in authService:', error.message);
-    throw error;
+    return { success: false, errorCode: 'SERVER_ERROR', errorMessage: 'Failed to process registration. Please try again.' };
   }
 };

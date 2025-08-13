@@ -1,11 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import MainTheme from '../../components/ui/theme/main/Layout'
 
-const Home = () => {console.log('Home component rendered')
+const Home = () => {
+  console.log('Home component rendered')
   return (
-    <View>
-      <Text>Home</Text>
-    </View>
+    <MainTheme
+      footerButtons={['Categories', 'Chats', 'Home', 'Cart', 'User']}
+      headerTitle='OTP Verification'
+    >
+      <View>
+        <Text>Home</Text>
+      </View>
+    </MainTheme>
   )
 }
 
