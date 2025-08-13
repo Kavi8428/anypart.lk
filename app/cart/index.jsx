@@ -1,23 +1,25 @@
+// app/cart/index.jsx
 import { StyleSheet, Text, View } from 'react-native';
 import MainTheme from '../../components/ui/theme/main/Layout';
+import { useExpoTabNavigation } from '../../hooks/useExpoTabNavigation';
 
-const Home = () => {
-  console.log('Home component rendered');
+const Cart = () => {
+  const { currentTab } = useExpoTabNavigation();
 
   return (
     <MainTheme
-      headerTitle='Home'
-      // activeTab will be auto-detected from current route
+      headerTitle='Shopping Cart'
+      activeTab={currentTab} // Use hook's current tab
     >
       <View style={styles.container}>
-        <Text style={styles.title}>Welcome to Home!</Text>
-        <Text style={styles.subtitle}>File-based routing with Expo Router</Text>
+        <Text style={styles.title}>Your Cart</Text>
+        <Text style={styles.subtitle}>Cart items will appear here</Text>
       </View>
     </MainTheme>
   );
 };
 
-export default Home;
+export default Cart;
 
 const styles = StyleSheet.create({
   container: {

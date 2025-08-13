@@ -1,23 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native';
 import MainTheme from '../../components/ui/theme/main/Layout';
 
-const Home = () => {
-  console.log('Home component rendered');
-
+const Categories = () => {
   return (
     <MainTheme
-      headerTitle='Home'
-      // activeTab will be auto-detected from current route
+      headerTitle='Categories'
     >
       <View style={styles.container}>
-        <Text style={styles.title}>Welcome to Home!</Text>
-        <Text style={styles.subtitle}>File-based routing with Expo Router</Text>
+        <Text style={styles.title}>Categories Page</Text>
+        <Text style={styles.subtitle}>Browse all categories here</Text>
       </View>
     </MainTheme>
   );
 };
 
-export default Home;
+export default Categories;
 
 const styles = StyleSheet.create({
   container: {

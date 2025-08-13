@@ -160,7 +160,7 @@ const Index = () => {
       />
       <Button
         title="Just Have a Look.."
-        onPress={() => router.push('/explore')}
+        onPress={() => router.push('/home')}
         buttonStyle={{ borderWidth: 2, borderColor: '#FFFFFF', borderRadius: 8, paddingVertical: 8 }}
         titleStyle={{ color: '#FFFFFF', fontSize: 18 }}
         containerStyle={{ marginTop: 16, width: '60%' }}

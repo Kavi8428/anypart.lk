@@ -1,52 +1,86 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { Button } from '@rneui/base';
-import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { 
+  Menu, 
+  MessageCircle, 
+  Home, 
+  ShoppingCart, 
+  User 
+} from 'lucide-react-native';
 
-const Footer = ({ buttons = [], handleNext }) => {
-  const getIcon = (button, index) => {
-    if (index === 0 && button.toLowerCase() === 'previous') {
-      return <ChevronLeft size={20} color="#FFFFFF" />;
+const Footer = ({ buttons = [], onTabChange, activeTab = 'Home' }) => {
+  const getIcon = (button) => {
+    const iconProps = {
+      size: 24,
+      color: button === activeTab ? '#3B82F6' : '#FFFFFF', // Blue for active, white for inactive
+    };
+
+    switch (button.toLowerCase()) {
+      case 'categories':
+        return <Menu {...iconProps} />;
+      case 'chat':
+        return <MessageCircle {...iconProps} />;
+      case 'home':
+        return <Home {...iconProps} />;
+      case 'cart':
+        return <ShoppingCart {...iconProps} />;
+      case 'profile':
+        return <User {...iconProps} />;
+      default:
+        return null;
     }
-    if (index === buttons.length - 1 && button.toLowerCase() === 'next') {
-      return <ChevronRight size={20} color="#FFFFFF" />;
-    }
-    return null;
   };
 
-  const handleButtonPress = (button, index) => {
-    if (button.toLowerCase() === 'next' && handleNext) {
-      handleNext();
-      // console.log('Next button pressed', );
-    } else {
-      console.log(`${button} button pressed`);
+  const handleTabPress = (button, index) => {
+    if (onTabChange && typeof onTabChange === 'function') {
+      onTabChange(button, index);
     }
+    console.log(`${button} tab pressed`);
   };
 
   return (
-    <View className="flex-row justify-around p-4 bg-primary border-t border-gray-300">
+    <View style={{
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      paddingVertical: 2,
+      paddingHorizontal: 8,
+      backgroundColor: '#FF6B35', // Orange background
+      borderTopWidth: 0,
+    }}>
       {buttons.map((button, index) => (
-        <Button
+        <TouchableOpacity
           key={index}
-          onPress={() => handleButtonPress(button, index)}
-          buttonStyle={{
-            backgroundColor: 'transparent',
-            borderWidth: 1,
-            borderColor: '#FFFFFF',
-            borderRadius: 8,
-            paddingHorizontal: 16,
+          onPress={() => handleTabPress(button, index)}
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
             paddingVertical: 8,
           }}
-          titleStyle={{
-            color: '#FFFFFF',
-            fontSize: 16,
-            fontWeight: '600',
-          }}
-          icon={getIcon(button, index)}
-          iconPosition={index === 0 ? 'left' : 'right'}
-          title={button}
-          containerStyle={{ marginHorizontal: 8 }}
-        />
+          activeOpacity={0.7}
+        >
+          <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: button === activeTab ? '#FFFFFF' : 'transparent',
+            borderRadius: button === activeTab ? 12 : 0,
+            paddingHorizontal: button === activeTab ? 16 : 8,
+            paddingVertical: button === activeTab ? 8 : 4,
+            minWidth: button === activeTab ? 80 : 'auto', 
+          }}>
+            {getIcon(button)}
+            <Text style={{
+              color: button === activeTab ? '#3B82F6' : '#FFFFFF',
+              fontSize: 10,
+              fontWeight: button === activeTab ? '600' : '500',
+              marginTop: 4,
+              textAlign: 'center',
+            }}>
+              {button.toUpperCase()}
+            </Text>
+          </View>
+        </TouchableOpacity>
       ))}
     </View>
   );

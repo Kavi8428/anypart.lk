@@ -11,7 +11,7 @@ const Header = ({ title = 'Buyer Registration' }) => {
           height={150}
           style={{ borderRadius: 8, overflow: 'hidden' }}
         /> */}
-        <Text className='text-white text-2xl font-bold'>{title}</Text>
+        {/* <Text className='text-white text-2xl font-bold'>{title}</Text> */}
 
       </View>
     </View>
